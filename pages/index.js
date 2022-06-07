@@ -2,8 +2,10 @@ import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import Dropdown from '../components/dropdown.js'
+import PageHeader from '../components/page_header.js'
 import InputBox from '../components/input_box.js'
 import ResultModal from '../components/result_modal.js'
+import LoginModal from '../components/login_modal.js'
 import TablaOperaciones from '../components/tabla_operaciones.js'
 import React, { useState, useEffect } from 'react';
 
@@ -20,7 +22,6 @@ export default function Home() {
   const [selectedCantidad, setSelectedCantidad] = useState(0);
   const [operaciones, setOperaciones] = useState([]);
   const [mensajeModal, setMensajeModal] = useState("");
-  const [mostrarModal, setMostrarModal] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
 
@@ -57,7 +58,6 @@ export default function Home() {
   const fetchOperaciones = () => {
     axios.get("http://127.0.0.1:3100/api/operaciones")
       .then(function (response) {
-        debugger;
         setOperaciones(response.data);
       })
       .catch(function (error) {
@@ -101,7 +101,6 @@ export default function Home() {
     .then(function (response) {
       fetchOperaciones();
       setMensajeModal(response.data);
-      setMostrarModal(true);
       console.log(response);
     })
     .catch(function (error) {
@@ -110,18 +109,29 @@ export default function Home() {
   }
 
   useEffect(() => {
+    debugger;
+    if (!isLoggedIn()) {
+      window.location.href = "/login"
+    }
     fetchDepositos();
     fetchLocales();
     fetchProductos();
     fetchOperaciones();
+    debugger;
     setLoaded(true);
   },[]);
 
+  const isLoggedIn = () => {
+    return parseInt(window.sessionStorage.getItem("user")) > 0;
+  }
+
   return (
     <>
-    <div>
+      <LoginModal></LoginModal>
+      <PageHeader text={"Transferir Stock de Depositos hacia Depositos o Tiendas."}/>
+
       {loaded && (
-        <div class="mx-10 grid grid-cols-5 gap-1 content-start ...">
+        <div class="mx-10 grid grid-cols-5 gap-1 content-start">
           <Dropdown title="Origen" options={origenOptions} onChange={handleOrigenSelectChange}></Dropdown>
           <Dropdown title="Destino" options={destinoOptions} onChange={handleDestinoSelectChange}></Dropdown>
           <Dropdown title="Producto" options={productoOptions} onChange={handleProductoSelectChange}></Dropdown> 
@@ -131,12 +141,8 @@ export default function Home() {
       )}
 
       <div class="divider"></div> 
-      <TablaOperaciones operaciones={operaciones}></TablaOperaciones>
-      {mostrarModal && (<ResultModal result={mensajeModal}></ResultModal>)}    
-    </div>
-
-
-
+      <TablaOperaciones mostrarFecha={false} operaciones={operaciones}></TablaOperaciones>
+      <ResultModal result={mensajeModal}></ResultModal>)   
     </>
 
   )

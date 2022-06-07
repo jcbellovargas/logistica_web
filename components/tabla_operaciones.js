@@ -11,7 +11,11 @@ export default function TablaOperaciones(props){
             <th class="bg-primary">Destino</th>
             <th class="bg-primary">Producto</th>
             <th class="bg-primary">Cantidad</th>
+            {props.mostrarFecha && (
+              <th class="bg-primary">Fecha</th>
+            )}
             <th class="bg-primary">Usuario</th>
+
           </tr>
         </thead>
         <tbody>
@@ -22,7 +26,11 @@ export default function TablaOperaciones(props){
               <td>{item.destino.nombre}</td>
               <td>{item.producto.nombre}</td>
               <td>{item.cantidad}</td>
+              {props.mostrarFecha && (
+                <td>{item.fecha}</td>
+              )}
               <td>{item.usuario.nombre}</td>
+
             </tr>
           ))}
         </tbody>
