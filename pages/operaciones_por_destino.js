@@ -67,7 +67,17 @@ export default function OperacionesPorDestino(props){
     return option_id;
   }
 
+  const isLoggedIn = () => {
+    
+    const user = window.sessionStorage.getItem("user");
+    const user_json = JSON.parse(user).id;
+    return parseInt(user_json) > 0;
+  }
+
   useEffect(() => {
+    if (!isLoggedIn()) {
+      window.location.href = "/login"
+    }
     fetchLocales();
     // fetchOperaciones();
     setLoaded(true);

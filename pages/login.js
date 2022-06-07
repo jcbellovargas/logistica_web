@@ -13,7 +13,6 @@ export default function OperacionesDelDia(props){
   const [mensaje, setMensaje] = useState("");
 
   const handleLoginClick = () => {
-    debugger;
     axios.get("http://127.0.0.1:3100/api/usuarios/login", {
         params: {
           usuario: usuario,
@@ -21,13 +20,16 @@ export default function OperacionesDelDia(props){
         }  
       })
       .then(function (response) {
+        const user = {id: response.data.id, nombre: response.data.nombre}
         debugger;
-        window.sessionStorage.setItem("user", parseInt(response.data.id));
+        window.sessionStorage.setItem("user", JSON.stringify(user));
         console.log(window.sessionStorage.getItem("user"))
         window.location.href = "/"
       })
       .catch(function (error) {
-        window.sessionStorage.setItem("user", 0);
+        const user = {id: 0, nombre: ""}
+        window.sessionStorage.setItem("user", JSON.stringify(user));
+        setMensaje("Usuario o contraseña inexistente")
         console.log(error);
       })
   }
@@ -42,7 +44,8 @@ export default function OperacionesDelDia(props){
   }
 
   useEffect(() => {
-    window.sessionStorage.setItem("user", 0);
+    const user = {id: 0, nombre: ""}
+    window.sessionStorage.setItem("user", JSON.stringify(user));
   },[]);
 
   return (

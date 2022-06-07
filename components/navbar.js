@@ -1,6 +1,25 @@
 import Link from 'next/link';
+import React, { useState, useEffect } from 'react';
 export default function Navbar() {
+  const [usuario, setUsuario] = useState("Login");
+
+
+  useEffect(() => {
+    
+    const user = window.sessionStorage.getItem("user");
+    const user_json = JSON.parse(user);
+    if (user_json.id > 0){
+      setUsuario(user_json.nombre)
+    }
+    debugger;
+
+    // setUsuario(JSON.parse(user) || "Login")
+  },[]);
+
+
+
   return (
+
     <div class="navbar bg-base-100 bg-primary text-primary-content">
       <div class="flex-1">
         <Link href="/">
@@ -38,11 +57,18 @@ export default function Navbar() {
             <ul class="p-2 bg-base-100">
               <li><a>Productos</a></li>
               <li><a>Locales</a></li>
-              {/*<li><a>Local</a></li>*/}
             </ul>
+          </li>
+          <li>
+            <Link href="/login">
+             <a class="btn btn-primary">{usuario}</a>
+            </Link>
           </li>
         </ul>
       </div>
     </div>
   )
 }
+
+
+

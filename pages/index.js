@@ -5,7 +5,6 @@ import Dropdown from '../components/dropdown.js'
 import PageHeader from '../components/page_header.js'
 import InputBox from '../components/input_box.js'
 import ResultModal from '../components/result_modal.js'
-import LoginModal from '../components/login_modal.js'
 import TablaOperaciones from '../components/tabla_operaciones.js'
 import React, { useState, useEffect } from 'react';
 
@@ -91,12 +90,19 @@ export default function Home() {
     setSelectedCantidad(e.target.value)
   }
 
+  const getUsuarioId = () => {
+    const user = window.sessionStorage.getItem("user");
+    const user_json = JSON.parse(user).id;
+    return parseInt(user_json); 
+  }
+
   const handleTransferirStock = () => {
     axios.post("http://127.0.0.1:3100/api/operaciones", {
       origen_id: selectedOrigen,
       destino_id: selectedDestino,
       producto_id: selectedProducto,
-      cantidad: selectedCantidad
+      cantidad: selectedCantidad,
+      usuario_id: getUsuarioId()
     })
     .then(function (response) {
       fetchOperaciones();
@@ -109,7 +115,6 @@ export default function Home() {
   }
 
   useEffect(() => {
-    debugger;
     if (!isLoggedIn()) {
       window.location.href = "/login"
     }
@@ -117,17 +122,18 @@ export default function Home() {
     fetchLocales();
     fetchProductos();
     fetchOperaciones();
-    debugger;
     setLoaded(true);
   },[]);
 
   const isLoggedIn = () => {
-    return parseInt(window.sessionStorage.getItem("user")) > 0;
+    
+    const user = window.sessionStorage.getItem("user");
+    const user_json = JSON.parse(user).id;
+    return parseInt(user_json) > 0;
   }
 
   return (
     <>
-      <LoginModal></LoginModal>
       <PageHeader text={"Transferir Stock de Depositos hacia Depositos o Tiendas."}/>
 
       {loaded && (
