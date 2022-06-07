@@ -90,11 +90,7 @@ export default function Home() {
     setSelectedCantidad(e.target.value)
   }
 
-  const getUsuarioId = () => {
-    const user = window.sessionStorage.getItem("user");
-    const user_json = JSON.parse(user).id;
-    return parseInt(user_json); 
-  }
+
 
   const handleTransferirStock = () => {
     axios.post("http://127.0.0.1:3100/api/operaciones", {
@@ -125,10 +121,17 @@ export default function Home() {
     setLoaded(true);
   },[]);
 
-  const isLoggedIn = () => {
-    
+  const getUsuarioId = () => {
     const user = window.sessionStorage.getItem("user");
-    const user_json = JSON.parse(user).id;
+    const user_json = 0
+    if (JSON.parse(user) && JSON.parse(user).id) {
+      user_json = JSON.parse(user).id
+    } 
+    return parseInt(user_json); 
+  }
+
+  const isLoggedIn = () => {
+    const user_json = getUsuarioId();
     return parseInt(user_json) > 0;
   }
 

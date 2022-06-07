@@ -8,8 +8,10 @@ export default function Navbar() {
     
     const user = window.sessionStorage.getItem("user");
     const user_json = JSON.parse(user);
-    if (user_json.id > 0){
+    if (user_json && user_json.id > 0){
       setUsuario(user_json.nombre)
+    } else {
+      setUsuario("Login")
     }
     debugger;
 

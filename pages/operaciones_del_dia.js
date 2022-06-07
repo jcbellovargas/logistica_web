@@ -22,10 +22,17 @@ export default function OperacionesDelDia(props){
       })
   }
 
-  const isLoggedIn = () => {
-    
+  const getUsuarioId = () => {
     const user = window.sessionStorage.getItem("user");
-    const user_json = JSON.parse(user).id;
+    const user_json = 0
+    if (JSON.parse(user) && JSON.parse(user).id) {
+      user_json = JSON.parse(user).id
+    } 
+    return parseInt(user_json); 
+  }
+  
+  const isLoggedIn = () => {
+    const user_json = getUsuarioId();
     return parseInt(user_json) > 0;
   }
 
